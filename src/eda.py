@@ -77,8 +77,7 @@ def generate_variable_overview(patients, data_dictionary, variable_groups):
     display(summary)
     
     csv_path = CSV_DIR / "variable_overview.csv"
-    print(f"\nArquivo CSV contendo os dados brutos salvo em: \n{csv_path}")
-    display(FileLink(csv_path, result_html_prefix="📄 Abrir CSV: "))
+    display(FileLink(csv_path, result_html_prefix="📄 Arquivo CSV contendo os dados brutos salvo! Abrir CSV: "))
         
     return variable_overview
 
@@ -143,8 +142,7 @@ def export_variable_overview_pdf(variable_overview):
 
     doc.build(story, onFirstPage=footer, onLaterPages=footer)
     
-    print(f"Arquivo PDF contendo as tabelas salvo em: \n{path}")
-    display(FileLink(path, result_html_prefix="📄 Abrir PDF: "))
+    display(FileLink(path, result_html_prefix="📄 Arquivo PDF contendo as tabelas salvo! Abrir PDF: "))
 
 def generate_drug_summary(drugs, patients):
     """Gera um resumo estatístico do uso de medicamentos."""
@@ -269,8 +267,8 @@ def print_outcome_details(patients, target):
 
 def generate_table1_stratified(patients, target, key_features):
     """
-    Gera estatísticas descritivas (Tabela 1) estratificadas pela variável alvo
-    para um subconjunto de características clínicas essenciais.
+    Gera a Tabela 1 consolidada (estatísticas descritivas estratificadas pelo alvo).
+    Unifica variáveis contínuas e categóricas em um único DataFrame para visualização limpa.
     """
     df = patients[key_features].copy()
     df['Desfecho'] = target.map({0: 'Estável (0)', 1: 'Óbito/Readmissão (1)'})
@@ -278,14 +276,29 @@ def generate_table1_stratified(patients, target, key_features):
     num_cols = df.select_dtypes(include='number').columns
     cat_cols = df.select_dtypes(exclude='number').columns.drop('Desfecho', errors='ignore')
     
-    print("--- Variáveis Contínuas/Discretas (Média ± Desvio Padrão) ---")
-    num_summary = df.groupby('Desfecho')[num_cols].agg(['mean', 'std']).round(2).T
-    display(num_summary)
+    rows = []
     
-    print("\n--- Variáveis Categóricas (Distribuição Percentual por Desfecho) ---")
+    # 1. Variáveis Contínuas/Discretas
+    rows.append({'Característica': '[ Contínuas: Média ± DP ]', 'Estável (0)': '', 'Óbito/Readmissão (1)': ''})
+    for col in num_cols:
+        stats = df.groupby('Desfecho')[col].agg(['mean', 'std'])
+        val_0 = f"{stats.loc['Estável (0)', 'mean']:.2f} ± {stats.loc['Estável (0)', 'std']:.2f}"
+        val_1 = f"{stats.loc['Óbito/Readmissão (1)', 'mean']:.2f} ± {stats.loc['Óbito/Readmissão (1)', 'std']:.2f}"
+        rows.append({'Característica': col, 'Estável (0)': val_0, 'Óbito/Readmissão (1)': val_1})
+        
+    # 2. Variáveis Categóricas
+    rows.append({'Característica': '[ Categóricas: Distribuição % ]', 'Estável (0)': '', 'Óbito/Readmissão (1)': ''})
     for col in cat_cols:
-        cross_tab = pd.crosstab(df[col], df['Desfecho'], normalize='columns') * 100
-        display(cross_tab.round(1).astype(str) + '%')
+        cross = pd.crosstab(df[col], df['Desfecho'], normalize='columns') * 100
+        for cat in cross.index:
+            val_0 = f"{cross.loc[cat, 'Estável (0)']:.1f}%"
+            val_1 = f"{cross.loc[cat, 'Óbito/Readmissão (1)']:.1f}%"
+            rows.append({'Característica': f"{col} = {cat}", 'Estável (0)': val_0, 'Óbito/Readmissão (1)': val_1})
+            
+    table1 = pd.DataFrame(rows)
+    
+    # Exibe a tabela sem o índice numérico lateral para ficar mais limpa
+    display(table1.style.hide(axis="index"))
 
 def plot_clinical_bivariate(patients, target):
     """
@@ -331,3 +344,43 @@ def plot_clinical_bivariate(patients, target):
     plt.tight_layout()
     plt.show()
     save_fig(fig, "bivariate_clinical_analysis")
+    
+def analyze_collinearity(df, threshold=0.85):
+    """
+    Calcula a correlação de Pearson para variáveis contínuas e identifica 
+    pares altamente correlacionados (colinearidade).
+    Apresenta os resultados ordenados em uma tabela Pandas formatada.
+    """
+    # Seleciona apenas as colunas numéricas
+    num_df = df.select_dtypes(include=[np.number])
+    
+    # Calcula a matriz de correlação absoluta
+    corr_matrix = num_df.corr().abs()
+    
+    # Seleciona o triângulo superior da matriz para evitar duplicatas (A-B e B-A)
+    upper = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
+    
+    # Busca os pares acima do limiar
+    collinear_pairs = []
+    for column in upper.columns:
+        highly_correlated_with = upper[column][upper[column] > threshold].index.tolist()
+        for correlated_var in highly_correlated_with:
+            collinear_pairs.append({
+                'Variável 1': correlated_var,
+                'Variável 2': column,
+                'Correlação (Pearson)': upper.loc[correlated_var, column]
+            })
+            
+    if not collinear_pairs:
+        print(f"Nenhum par com correlação > {threshold} encontrado.")
+        return pd.DataFrame()
+        
+    # Converte para DataFrame e ordena da maior para a menor correlação
+    df_collinear = pd.DataFrame(collinear_pairs)
+    df_collinear = df_collinear.sort_values(by='Correlação (Pearson)', ascending=False)
+    
+    # Exibe a tabela ocultando o índice lateral e formatando as casas decimais
+    print(f"--- Pares Altamente Correlacionados (Pearson > {threshold}) ---")
+    display(df_collinear.style.hide(axis="index").format({'Correlação (Pearson)': "{:.3f}"}))
+    
+    return df_collinear

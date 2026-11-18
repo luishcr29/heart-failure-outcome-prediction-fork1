@@ -60,8 +60,7 @@ def save_fig(fig, name):
     filepath = FIGURES_DIR / f"{name}.pdf"
     fig.savefig(filepath, bbox_inches="tight")
 
-    print(f"Figura salva como PDF vetorial em: \n{filepath}")
-    display(FileLink(filepath, result_html_prefix="📄 Abrir figura: "))
+    display(FileLink(filepath, result_html_prefix="📄 Figura salva! Abrir: "))
     
 def clean_results():
     """
