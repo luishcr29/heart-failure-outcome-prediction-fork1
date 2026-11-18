@@ -1,3 +1,9 @@
+"""
+Módulo de Treinamento e Validação de Modelos.
+Responsável pelo particionamento estratificado dos dados, encapsulamento em
+pipelines e ajuste de hiperparâmetros via validação cruzada.
+"""
+
 import pandas as pd
 from sklearn.model_selection import train_test_split, StratifiedKFold, GridSearchCV
 from sklearn.pipeline import Pipeline

@@ -1,3 +1,9 @@
+"""
+Módulo de Avaliação e Interpretabilidade Clínica.
+Responsável pelo cálculo de métricas no conjunto de teste, geração de curvas ROC,
+matriz de confusão e análise de importância dos atributos.
+"""
+
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -128,9 +134,27 @@ def plot_clinical_interpretability(
 
     print(f"LASSO (L1) manteve {n_selected} de {len(lasso_names)} atributos com coeficiente não-nulo.")
 
-    fig, axes = plt.subplots(1, 2, figsize=(13, 6))
+    # fig, axes = plt.subplots(1, 2, figsize=(13, 6))
 
-    # Painel Esquerdo: Random Forest
+    # # Painel Esquerdo: Random Forest
+    # axes[0].barh(rf_df["Atributo"], rf_df["Importância"], color="#2b6cb0")
+    # axes[0].set_title(f"Top {top_n} Atributos — Random Forest (Gini)")
+    # axes[0].set_xlabel("Importância Relativa")
+    # axes[0].xaxis.set_major_locator(mticker.MaxNLocator(nbins=5))
+    # axes[0].xaxis.set_major_formatter(mticker.FormatStrFormatter("%.3f"))
+    # axes[0].grid(axis="x", alpha=0.3)
+
+    # # Painel Direito: LASSO
+    # colors = ["#c53030" if c > 0 else "#2f855a" for c in lasso_top["Coeficiente"]]
+    # axes[1].barh(lasso_top["Atributo"], lasso_top["Coeficiente"], color=colors)
+    # axes[1].axvline(0, color="black", lw=0.8)
+    # axes[1].set_title(f"Top {top_n} Coeficientes — LASSO L1 (Vermelho = ↑ Risco)")
+    # axes[1].set_xlabel("Coeficiente Log-Odds Padronizado")
+    # axes[1].grid(axis="x", alpha=0.3)
+
+    fig, axes = plt.subplots(2, 1, figsize=(7, 8.5))
+
+    # Painel Superior: Random Forest
     axes[0].barh(rf_df["Atributo"], rf_df["Importância"], color="#2b6cb0")
     axes[0].set_title(f"Top {top_n} Atributos — Random Forest (Gini)")
     axes[0].set_xlabel("Importância Relativa")
@@ -138,7 +162,7 @@ def plot_clinical_interpretability(
     axes[0].xaxis.set_major_formatter(mticker.FormatStrFormatter("%.3f"))
     axes[0].grid(axis="x", alpha=0.3)
 
-    # Painel Direito: LASSO
+    # Painel Inferior: LASSO
     colors = ["#c53030" if c > 0 else "#2f855a" for c in lasso_top["Coeficiente"]]
     axes[1].barh(lasso_top["Atributo"], lasso_top["Coeficiente"], color=colors)
     axes[1].axvline(0, color="black", lw=0.8)

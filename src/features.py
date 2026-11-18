@@ -161,19 +161,3 @@ def build_preprocessor(variable_types):
     )
 
     return preprocessor
-
-
-def build_feature_selector(C=0.1, random_state=42):
-    """
-    Constrói um seletor embutido via regularização L1 (LASSO) para mitigar
-    multicolinearidade e promover esparsidade antes de modelos sensíveis (LDA, QDA, KNN, SVM).
-    """
-    lasso_estimator = LogisticRegression(
-        penalty="l1",
-        solver="liblinear",
-        C=C,
-        class_weight="balanced",
-        random_state=random_state,
-        max_iter=1000,
-    )
-    return SelectFromModel(estimator=lasso_estimator)

@@ -47,16 +47,16 @@ Crie uma pasta **`DataBase/`** na raiz do repositório e coloque nela os arquivo
 │   ├── LICENSE.txt
 │   └── SHA256SUMS.txt
 ├── notebooks/
-│   └── main.ipynb             <- Painel executivo e orquestração
+│   ├── main.ipynb             <- Painel executivo e orquestração
+│   └── clean.ipynb            <- Limpeza de artefatos e resultados gerados
 ├── src/                       <- Módulos Python com a lógica do projeto
 │   ├── __init__.py
 │   ├── utils.py               <- Utilidades e configurações globais
 │   ├── eda.py                 <- Análise exploratória de dados
-│   ├── preprocessing.py       <- Limpeza e tratamento de dados ausentes
-│   ├── features.py            <- Seleção e engenharia de atributos
-│   ├── train.py               <- Definição, ajuste e otimização dos modelos
-│   └── evaluate.py            <- Métricas, validação cruzada e avaliação
-├── results/                   <- Tabelas e figuras geradas para o artigo
+│   ├── preprocessing.py       <- Limpeza e tipologia das variáveis
+│   ├── features.py            <- Engenharia e pré-processamento de atributos
+│   ├── train.py               <- Particionamento, validação cruzada e ajuste dos modelos
+│   └── evaluate.py            <- Avaliação no teste, curvas ROC e interpretabilidade clínica├── results/                   <- Tabelas e figuras geradas para o artigo
 ├── requirements.txt
 └── README.md
 ```
@@ -74,7 +74,7 @@ As quatro linhas devem terminar em `OK`.
 
 ## 2. Configuração Inicial e Execução
 
-Requer Python 3.13. Na primeira vez, rode na raiz do repositório:
+Requer Python 3.12 ou superior. Na primeira vez, rode na raiz do repositório:
 
 ```bash
 python3 -m venv .venv
@@ -93,15 +93,16 @@ As figuras são salvas em `results/figures/` e as tabelas em `results/`.
 
 | Caminho | Conteúdo |
 |---|---|
-| `notebooks/main.ipynb` | Orquestração do fluxo, visualizações e relatórios para o artigo |
-| `src/utils.py` | Centraliza paths, configurações visuais e sementes aleatórias. |
-| `src/eda.py` | Responsável por gerar visualizações e resumos estatísticos. |
-| `src/preprocessing.py` | Funções de limpeza, tratamento de missings e tipagem |
-| `src/features.py` | Funções de engenharia de atributos e seleção de variáveis |
-| `src/train.py` | Pipeline de treinamento e ajuste de hiperparâmetros dos modelos |
-| `src/evaluate.py` | Cálculo de métricas de desempenho e validação cruzada |
-| `results/` | Tabelas (CSV) e figuras (`figures/`) geradas pelo notebook |
-| `requirements.txt` | Dependências com versões fixadas |
+| `notebooks/main.ipynb` | Orquestração do fluxo, visualizações e resultados para o artigo |
+| `notebooks/clean.ipynb` | Utilitário para limpeza dos arquivos gerados em `results/` |
+| `src/utils.py` | Centraliza caminhos, configurações visuais e sementes aleatórias |
+| `src/eda.py` | Visualizações exploratórias, análise de ausências e correlação |
+| `src/preprocessing.py` | Carga, integração das bases, remoção de vazamento e tipologia |
+| `src/features.py` | Pivotamento de medicamentos, *missing flags* e transformador de colunas |
+| `src/train.py` | Divisão estratificada, pipelines e validação cruzada com ajuste de hiperparâmetros |
+| `src/evaluate.py` | Avaliação final no teste, curvas ROC, matriz de confusão e importância de atributos |
+| `results/` | Tabelas e figuras vetoriais (`figures/`) geradas pelo notebook |
+| `requirements.txt` | Dependências do ambiente com versões fixadas |
 
 ## 4. Referências da base
 
