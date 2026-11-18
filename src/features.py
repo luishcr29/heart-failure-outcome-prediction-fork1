@@ -6,6 +6,15 @@ transformar a base de medicamentos, fundir os dados e criar indicadores de ausê
 
 import pandas as pd
 
+# Scikit-Learn
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.feature_selection import SelectFromModel
+from sklearn.linear_model import LogisticRegression
+
+
 def remove_leakage(patients_df, variable_groups):
     """
     Remove as colunas que causam vazamento de informação (data leakage),
@@ -111,3 +120,54 @@ def build_feature_set(patients_df, drugs_df, variable_groups):
     X_features = add_missing_indicators(X_features, threshold=20.0)
     
     return X_features
+
+def build_preprocessor(variable_types):
+    """
+    Constrói o ColumnTransformer para pré-processamento matemático das features.
+    Deve ser ajustado (.fit) exclusivamente dentro da validação cruzada para evitar data leakage.
+    """
+    num_cols = variable_types["continuas"] + variable_types["discretas"]
+    cat_cols = variable_types["categoricas"]
+    bin_cols = variable_types["binarias"]
+
+    num_pipeline = Pipeline(steps=[
+        ("imputer", SimpleImputer(strategy="median")),
+        ("scaler", StandardScaler()),
+    ])
+
+    cat_pipeline = Pipeline(steps=[
+        ("imputer", SimpleImputer(strategy="most_frequent")),
+        ("encoder", OneHotEncoder(drop="first", handle_unknown="ignore", sparse_output=False)),
+    ])
+
+    # Imputação pela moda nas binárias protege contra nulos residuais (< 0.2% em comorbidades)
+    bin_pipeline = Pipeline(steps=[
+        ("imputer", SimpleImputer(strategy="most_frequent")),
+    ])
+
+    preprocessor = ColumnTransformer(
+        transformers=[
+            ("num", num_pipeline, num_cols),
+            ("cat", cat_pipeline, cat_cols),
+            ("bin", bin_pipeline, bin_cols),
+        ],
+        remainder="drop",
+    )
+
+    return preprocessor
+
+
+def build_feature_selector(C=0.1, random_state=42):
+    """
+    Constrói um seletor embutido via regularização L1 (LASSO) para mitigar
+    multicolinearidade e promover esparsidade antes de modelos sensíveis (LDA, QDA, KNN, SVM).
+    """
+    lasso_estimator = LogisticRegression(
+        penalty="l1",
+        solver="liblinear",
+        C=C,
+        class_weight="balanced",
+        random_state=random_state,
+        max_iter=1000,
+    )
+    return SelectFromModel(estimator=lasso_estimator)
