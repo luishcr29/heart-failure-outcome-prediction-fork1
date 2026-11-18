@@ -3,7 +3,7 @@ Módulo de pré-processamento de dados.
 Responsável pelo carregamento bruto, definição de grupos de variáveis 
 e formulação da variável alvo (target).
 """
-
+import numpy as np
 import pandas as pd
 from src.utils import DATA_DIR
 
@@ -92,38 +92,43 @@ def create_target(patients_df):
     
     return target
 
-def get_variable_types(df):
+def get_variable_types(df, max_discrete_unique=15):
     """
-    Classifica as variáveis do DataFrame em categorias de tipologia
-    para alimentar os pipelines de pré-processamento.
-    
-    Parâmetros:
-        df (pd.DataFrame): O DataFrame a analisar.
-        
-    Retorna:
-        dict: Dicionário com as listas de colunas 'binarias', 'categoricas', 
-              'continuas' e 'discretas'.
+    Classifica as colunas preditoras em: continuas, discretas, binarias e categoricas.
+    - categoricas: qualquer coluna não numérica (object, string, category), mesmo com 2 níveis.
+    - binarias: apenas colunas numéricas cujos valores não nulos pertencem a {0, 1}.
+    - discretas: colunas numéricas inteiras (ou floats com valores inteiros) de baixa cardinalidade.
+    - continuas: demais colunas numéricas.
     """
-    binary = []
-    categorical = []
-    continuous = []
-    discrete = []
-    
-    for col in df.columns:
-        n_unique = df[col].dropna().nunique()
-        if n_unique <= 2:
-            binary.append(col)
-        elif pd.api.types.is_numeric_dtype(df[col]):
-            if n_unique > 10:
-                continuous.append(col)
-            else:
-                discrete.append(col)
-        else:
-            categorical.append(col)
-            
-    return {
-        "binarias": binary,
-        "categoricas": categorical,
-        "continuas": continuous,
-        "discretas": discrete
+    types = {
+        "continuas": [],
+        "discretas": [],
+        "binarias": [],
+        "categoricas": [],
     }
+
+    for col in df.columns:
+        series = df[col]
+        non_null = series.dropna()
+
+        # 1. Colunas de texto/categoria vão sempre para 'categoricas'
+        if not pd.api.types.is_numeric_dtype(series):
+            types["categoricas"].append(col)
+            continue
+
+        unique_vals = set(non_null.unique())
+
+        # 2. Binárias: estritamente numéricas em {0, 1}
+        if len(unique_vals) > 0 and unique_vals.issubset({0, 1, 0.0, 1.0}):
+            types["binarias"].append(col)
+        # 3. Discretas: valores inteiros com baixa cardinalidade (ex: escores, contagens)
+        elif (
+            len(unique_vals) <= max_discrete_unique
+            and np.all(np.isclose(non_null % 1, 0))
+        ):
+            types["discretas"].append(col)
+        # 4. Contínuas: demais variáveis numéricas
+        else:
+            types["continuas"].append(col)
+
+    return types

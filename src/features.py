@@ -119,6 +119,12 @@ def build_feature_set(patients_df, drugs_df, variable_groups):
     # 4. Cria indicadores para exames não solicitados (captura a intenção médica)
     X_features = add_missing_indicators(X_features, threshold=20.0)
     
+    # Remove colunas 100% ausentes ou constantes (variância zero)
+    constant_cols = [col for col in X_features.columns if X_features[col].nunique(dropna=True) <= 1]
+    if constant_cols:
+        X_features = X_features.drop(columns=constant_cols)
+        print(f"Removidas {len(constant_cols)} colunas vazias/constantes: {constant_cols}")
+    
     return X_features
 
 def build_preprocessor(variable_types):
