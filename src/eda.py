@@ -12,7 +12,7 @@ from matplotlib.transforms import Bbox
 from matplotlib.backends.backend_pdf import PdfPages
 from matplotlib.colors import ListedColormap
 from IPython.display import FileLink, Markdown, display
-from src.utils import SERIES_COLOR, NEUTRAL_COLOR, NEUTRAL_LIGHT_COLOR, MUTED_COLOR, RESULTS_DIR, save_fig
+from src.utils import SERIES_COLOR, NEUTRAL_COLOR, NEUTRAL_LIGHT_COLOR, MUTED_COLOR, RESULTS_DIR, CSV_DIR, save_fig
 
 # Importações para geração do PDF com as tabelas
 # Requer: pip install reportlab
@@ -64,7 +64,8 @@ def generate_variable_overview(patients, data_dictionary, variable_groups):
         variable_overview["grupo"], categories=list(variable_groups), ordered=True
     )
     variable_overview = variable_overview.sort_values("grupo", kind="stable").reset_index(drop=True)
-    variable_overview.to_csv(RESULTS_DIR / "variable_overview.csv", index=False)
+    # variable_overview.to_csv(RESULTS_DIR / "variable_overview.csv", index=False)
+    variable_overview.to_csv(CSV_DIR / "variable_overview.csv", index=False)
         
     summary = variable_overview.groupby("grupo", observed=True).agg(
         n_variáveis=("variável", "size"),
@@ -74,11 +75,22 @@ def generate_variable_overview(patients, data_dictionary, variable_groups):
 
     print("Resumo por Grupo Clínico:")
     display(summary)
+    
+    csv_path = CSV_DIR / "variable_overview.csv"
+    print(f"\nArquivo CSV contendo os dados brutos salvo em: \n{csv_path}")
+    display(FileLink(csv_path, result_html_prefix="📄 Abrir CSV: "))
+        
     return variable_overview
 
 
-def export_variable_overview_pdf(variable_overview, path):
-    """Exporta uma tabela formatada por grupo clínico para um PDF (A4 paisagem)."""
+# def export_variable_overview_pdf(variable_overview, path):
+def export_variable_overview_pdf(variable_overview):
+    """
+    Exporta uma tabela formatada por grupo clínico para um PDF (A4 paisagem).
+    """
+    pdf_name = "variable_overview.pdf"
+    path = RESULTS_DIR / pdf_name
+    
     styles = getSampleStyleSheet()
     title_style = ParagraphStyle("t", parent=styles["Heading2"], spaceAfter=6)
     cell = ParagraphStyle("c", parent=styles["BodyText"], fontSize=7.5, leading=9.5)
@@ -130,34 +142,9 @@ def export_variable_overview_pdf(variable_overview, path):
         canvas.restoreState()
 
     doc.build(story, onFirstPage=footer, onLaterPages=footer)
-
-
-def display_variable_overview(variable_overview):
-    """
-    No notebook, mostra apenas orientações; as tabelas por grupo
-    são exportadas para PDF.
-    """
-    pdf_name = "variable_overview.pdf"
-    pdf_path = RESULTS_DIR / pdf_name
-    csv_name = "variable_overview.csv"
-    csv_path = RESULTS_DIR / csv_name
-    n_groups = variable_overview["grupo"].nunique()
-    export_variable_overview_pdf(variable_overview, pdf_path)
-
-    # display(Markdown(
-    #     f"### Tabelas detalhadas por grupo clínico\n"
-    #     f"As {n_groups} tabelas detalhadas (variável, descrição, tipo, % de faltantes e "
-    #     f"valores observados) não são exibidas aqui. Foram exportadas para um arquivo PDF, "
-    #     f"com uma tabela por grupo, uma por página.\n\n"
-    #     f"- Arquivo: `{pdf_path}`\n"
-    #     f"- Como abrir: clique no link abaixo ou acesse a pasta de resultados do projeto.\n"
-    #     f"- Dados brutos: `variable_overview.csv`, na mesma pasta.\n"
-    #     f"- Para regenerar o PDF, execute novamente esta célula."
-    # ))
-    print(f"Arquivo PDF contendo as tabelas salvo em: \n{pdf_path}")
-    print(f"\nArquivo CSV contendo os dados brutos salvo em: \n{csv_path}")
-    display(FileLink(pdf_path, result_html_prefix="📄 Abrir PDF: "))
-    display(FileLink(csv_path, result_html_prefix="📄 Abrir CSV: "))
+    
+    print(f"Arquivo PDF contendo as tabelas salvo em: \n{path}")
+    display(FileLink(path, result_html_prefix="📄 Abrir PDF: "))
 
 def generate_drug_summary(drugs, patients):
     """Gera um resumo estatístico do uso de medicamentos."""
@@ -299,31 +286,6 @@ def generate_table1_stratified(patients, target, key_features):
     for col in cat_cols:
         cross_tab = pd.crosstab(df[col], df['Desfecho'], normalize='columns') * 100
         display(cross_tab.round(1).astype(str) + '%')
-
-# def plot_clinical_bivariate(patients, target):
-#     """
-#     Gera boxplots comparativos para identificar o comportamento de variáveis 
-#     críticas e outliers biológicos entre as duas classes do alvo.
-#     """
-#     df = patients.copy()
-#     df['Desfecho'] = target.map({0: 'Estável', 1: 'Óbito/Readmissão'})
-    
-#     # Seleção de variáveis clínicas com forte impacto em Insuficiência Cardíaca
-#     vars_to_plot = ['LVEF', 'CCI.score', 'systolic.blood.pressure', 'brain.natriuretic.peptide']
-#     valid_vars = [v for v in vars_to_plot if v in df.columns]
-    
-#     fig, axes = plt.subplots(1, len(valid_vars), figsize=(16, 4))
-    
-#     for ax, var in zip(axes, valid_vars):
-#         sns.boxplot(x='Desfecho', y=var, data=df, ax=ax, palette=[NEUTRAL_COLOR, SERIES_COLOR], showfliers=True)
-#         ax.set_title(var, fontsize=10, fontweight='bold')
-#         ax.set_xlabel('')
-#         ax.set_ylabel('')
-#         ax.grid(axis='y', linestyle='--', alpha=0.6)
-        
-#     plt.tight_layout()
-#     plt.show()
-#     save_fig(fig, "bivariate_clinical_analysis")
 
 def plot_clinical_bivariate(patients, target):
     """

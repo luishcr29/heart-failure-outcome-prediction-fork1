@@ -1,0 +1,167 @@
+grupo,variável,descrição,tipo,faltantes (%),valores observados
+Identificação,inpatient.number,The patient unique ID,numérica,0.0,722128 – 798758 – 905720
+Demografia,occupation,occupation,categórica,1.3,"Officer, Others, UrbanResident, farmer, worker"
+Demografia,gender,"gender: Male, Female",binária,0.0,"Female, Male"
+Demografia,ageCat,ageCat:the age is categorized in decades,categórica,0.0,"(21,29], (29,39], (39,49], (49,59], (59,69], (69,79], (79,89], (89,110]"
+Admissão e histórico,admission.ward,first admission ward,categórica,0.0,"Cardiology, GeneralWard, ICU, Others"
+Admissão e histórico,admission.way,possible ways of admission are Emergency vs. non-emergency,binária,0.0,"Emergency, NonEmergency"
+Admissão e histórico,visit.times,the number of hospital admissions before this hospitalization,discreta,0.0,"1, 2, 3, 4, 5"
+Sinais vitais e antropometria,body.temperature,body temperature in degrees celsius,numérica,0.0,35 – 36.3 – 42
+Sinais vitais e antropometria,pulse,pulse rate (beats per minute),numérica,0.0,0 – 82 – 198
+Sinais vitais e antropometria,respiration,respiratory rate (breaths/min),numérica,0.0,0 – 19 – 36
+Sinais vitais e antropometria,systolic.blood.pressure,systolic blood pressure (mmHg),numérica,0.0,0 – 130 – 252
+Sinais vitais e antropometria,diastolic.blood.pressure,diastolic blood pressure (mmHg),numérica,0.0,0 – 76 – 146
+Sinais vitais e antropometria,map,mean arterial pressure (mmHg),numérica,0.0,0 – 93.3333 – 181.333
+Sinais vitais e antropometria,weight,weight (kg),numérica,0.0,0 – 50 – 115
+Sinais vitais e antropometria,height,height (m),numérica,0.0,0.35 – 1.56 – 1.83
+Sinais vitais e antropometria,BMI,BMI (kg/m^2),numérica,0.0,0 – 20.7612 – 404.082
+Classificação da IC,type.of.heart.failure,"type of heart failure (left, right, both)",categórica,0.0,"Both, Left, Right"
+Classificação da IC,NYHA.cardiac.function.classification,NYHA.cardiac.function.classification,categórica,0.0,"II, III, IV"
+Classificação da IC,Killip.grade,"Killip.grade: Class 1 No rales, no 3rd heart sound; Class 2 Rales in <1⁄2 lung field or presence of a 3rd heart sound; Class 3 Rales in >1⁄2 lung field–pulmonary edema;Class 4 Cardiogenic shock–determined clinically",categórica,0.0,"I, II, III, IV"
+Comorbidades,myocardial.infarction,myocardial.infarction,binária,0.0,"0, 1"
+Comorbidades,congestive.heart.failure,"congestive heart failure (e.g., A minority of patients were not coded as having the diagnosis of “congestive heart failure” in the comorbidity list because they did not have past history of congestive heart failure on admission. They were diagnosed with HF for the first time in this index hospitalization.)",binária,0.0,"0, 1"
+Comorbidades,peripheral.vascular.disease,peripheral.vascular.disease,binária,0.0,"0, 1"
+Comorbidades,cerebrovascular.disease,cerebrovascular.disease,binária,0.0,"0, 1"
+Comorbidades,dementia,dementia,binária,0.0,"0, 1"
+Comorbidades,Chronic.obstructive.pulmonary.disease,Chronic.obstructive.pulmonary.disease,binária,0.0,"0, 1"
+Comorbidades,connective.tissue.disease,connective.tissue.disease,binária,0.0,"0, 1"
+Comorbidades,peptic.ulcer.disease,peptic.ulcer.disease,binária,0.1,"0.0, 1.0"
+Comorbidades,diabetes,diabetes,binária,0.0,"0, 1"
+Comorbidades,moderate.to.severe.chronic.kidney.disease,moderate to severe chronic kidney disease with Glomerular filtration rate < 60 ml/min,binária,0.1,"0.0, 1.0"
+Comorbidades,hemiplegia,hemiplegia,binária,0.0,"0, 1"
+Comorbidades,leukemia,leukemia,discreta,0.0,0
+Comorbidades,malignant.lymphoma,malignant.lymphoma,binária,0.0,"0, 1"
+Comorbidades,solid.tumor,solid.tumor,binária,0.0,"0, 1"
+Comorbidades,liver.disease,liver.disease,binária,0.0,"0.0, 1.0"
+Comorbidades,AIDS,AIDS,binária,0.0,"0, 1"
+Comorbidades,CCI.score,Charlson Comorbidity Index score,discreta,0.2,"0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0"
+Estado clínico na admissão,type.II.respiratory.failure,type.II.respiratory.failure,binária,0.0,"NonTypeII, TypeII"
+Estado clínico na admissão,consciousness,consciousness,categórica,0.0,"Clear, Nonresponsive, ResponsiveToPain, ResponsiveToSound"
+Estado clínico na admissão,eye.opening,eye.opening,discreta,0.0,"1, 2, 3, 4"
+Estado clínico na admissão,verbal.response,verbal.response,discreta,0.0,"1, 2, 3, 4, 5"
+Estado clínico na admissão,movement,movement,discreta,0.0,"1, 2, 3, 4, 5, 6"
+Estado clínico na admissão,respiratory.support.,respiratory support defined as the use of either invasive or non-invasive mechanical ventilation,binária,97.9,"IMV, NIMV"
+Estado clínico na admissão,oxygen.inhalation,oxygen.inhalation,binária,0.0,"AmbientAir, OxygenTherapy"
+Estado clínico na admissão,fio2,fraction of inspired oxygenation (%),numérica,0.0,21 – 33 – 100
+Estado clínico na admissão,acute.renal.failure,"presence of acute kidney injury defined as Increase of serum creatinine ≥ 0.3 mg per dL (26.52 μmol per L) or ≥ 1.5- to twofold from baseline, or urine output < 0.5 mL per kg per hour for more than six hours",binária,0.0,"0, 1"
+Estado clínico na admissão,GCS,Glasgow Coma Scale: range 3-15,discreta,0.0,"10, 11, 12, 13, 14, 15, 3, 4, 6, 7"
+Ecocardiograma,LVEF,"Left Ventricular Ejection Fraction (%), normal range: 55% - 70%",numérica,68.4,5 – 51 – 82
+Ecocardiograma,left.ventricular.end.diastolic.diameter.LV,"left.ventricular.end.diastolic.diameter.LV (cm), normal range: 3.5 - 5.6 cm",numérica,34.7,0.3 – 53 – 88
+Ecocardiograma,mitral.valve.EMS,maximum velocity of the mitral.valve E wave (m/s),numérica,51.2,0.03 – 1.01 – 409
+Ecocardiograma,mitral.valve.AMS,maximum velocity of the mitral.valve A wave (m/s),numérica,72.6,0.06 – 0.83 – 408
+Ecocardiograma,EA,"E/A ratio, normal range: 0.6-1.32",numérica,80.4,0.0616 – 0.98 – 21.3
+Ecocardiograma,tricuspid.valve.return.velocity,tricuspid.valve.return.velocity (m/s),numérica,60.7,0.9 – 2.9 – 5.76
+Ecocardiograma,tricuspid.valve.return.pressure,tricuspid.valve.return.pressure (mmHg),numérica,90.9,1.7 – 34 – 87
+Lab. — função renal,creatinine.enzymatic.method,"creatinine (enzymatic method, umol/l); normal range:44-110 umol/L ",numérica,1.1,27.6 – 87.1 – 963.4
+Lab. — função renal,urea,"urea (mmol/l), ref:1.7 - 8.3 mmol/L",numérica,1.1,1.58 – 8.03 – 45.63
+Lab. — função renal,uric.acid,uric.acid (umol/L); ref: 150 - 440 umol/L,numérica,1.1,62 – 458 – 1409
+Lab. — função renal,glomerular.filtration.rate,glomerular.filtration.rate (mL/min/1.73 m^2); ref: 90 -120,numérica,3.1,3.13 – 64.79 – 281.01
+Lab. — função renal,cystatin,cystatin (mg/L); ref:0.51–0.98,numérica,2.0,0.23 – 1.55 – 10.37
+Lab. — hemograma,white.blood.cell,white blood cell count (*10^9/L); ref: 4 -10,numérica,1.3,1.66 – 6.5 – 32.79
+Lab. — hemograma,monocyte.ratio,monocyte.ratio (%); ref: 3 -11.4,numérica,1.3,0.002 – 0.066 – 0.27
+Lab. — hemograma,monocyte.count,monocyte.count (*10^9/L); ref:0.2 - 0.8,numérica,1.3,0.01 – 0.42 – 2.33
+Lab. — hemograma,red.blood.cell,red blood cell count (*10^12/L); ref: 3.5 - 5.5,numérica,1.3,0.89 – 3.89 – 7.02
+Lab. — hemograma,coefficient.of.variation.of.red.blood.cell.distribution.width,coefficient of variation of.red.blood.cell.distribution.width(%); ref: 0 -15,numérica,1.5,11.8 – 14.4 – 29.9
+Lab. — hemograma,standard.deviation.of.red.blood.cell.distribution.width,standard.deviation.of.red.blood.cell.distribution.width (fL); ref: 40 - 53,numérica,1.5,32.3 – 47.8 – 98
+Lab. — hemograma,mean.corpuscular.volume,mean.corpuscular.volume (fL); ref: 82 - 96,numérica,1.4,57.8 – 93.3 – 135.8
+Lab. — hemograma,hematocrit,hematocrit(%); ref: 35 - 50,numérica,1.4,0.094 – 0.359 – 0.605
+Lab. — hemograma,lymphocyte.count,lymphocyte.count (*10^9/L); ref:0.8 - 4,numérica,1.3,0.08 – 0.93 – 6.69
+Lab. — hemograma,mean.hemoglobin.volume,mean.hemoglobin.content(pg); ref: 27 - 35,numérica,1.4,15.6 – 30.6 – 45.3
+Lab. — hemograma,mean.hemoglobin.concentration,mean.hemoglobin.concentration (g/L); ref: 320 - 360,numérica,1.3,252 – 326 – 363
+Lab. — hemograma,mean.platelet.volume,mean.platelet.volume(fL); ref: 6.5 - 12,numérica,5.1,7.7 – 12.1 – 17.6
+Lab. — hemograma,basophil.ratio,basophil.ratio; ref: 0 -1,numérica,1.3,0 – 0.004 – 0.063
+Lab. — hemograma,basophil.count,basophil.count(*10^9/L); ref: 0 - 0.1,numérica,1.3,0 – 0.03 – 0.73
+Lab. — hemograma,eosinophil.ratio,eosinophil.ratio; ref: 0.5 -5,numérica,1.3,0 – 0.009 – 0.62
+Lab. — hemograma,eosinophil.count,eosinophil.count(*10^9/L); ref: 0.02-0.5,numérica,1.3,0 – 0.06 – 6.58
+Lab. — hemograma,hemoglobin,hemoglobin (g/L); ref: 110 - 160,numérica,1.4,29 – 117 – 200
+Lab. — hemograma,platelet,platelet(*10^9/L); ref:100 - 300,numérica,1.3,5 – 135 – 646
+Lab. — hemograma,platelet.distribution.width,platelet.distribution.width (fL); ref: 9 -17,numérica,5.1,9.5 – 16.3 – 25.1
+Lab. — hemograma,platelet.hematocrit,platelet.hematocrit(%); ref: 0.108 - 0.282,numérica,5.1,0.009 – 0.165 – 0.702
+Lab. — hemograma,neutrophil.ratio,neutrophil.ratio; ref: 0.5 -0.7,numérica,1.3,0.207 – 0.759 – 0.976
+Lab. — hemograma,neutrophil.count,neutrophil.count(*10^9/L); 2 -7,numérica,1.3,0.74 – 4.83 – 29.94
+Lab. — coagulação,D.dimer,D.dimer(mg/l); ref: 0 - 0.55,numérica,8.4,0 – 1.21 – 100.1
+Lab. — coagulação,international.normalized.ratio,international.normalized.ratio; ref: 0.8 - 1.5,numérica,1.7,0.83 – 1.21 – 16.59
+Lab. — coagulação,activated.partial.thromboplastin.time,activated.partial.thromboplastin.time(s); ref: 20 -40,numérica,1.7,20 – 34.1 – 181.9
+Lab. — coagulação,thrombin.time,thrombin.time (s); ref: 14-21,numérica,1.7,9.7 – 17.2 – 209.3
+Lab. — coagulação,prothrombin.activity,prothrombin.activity(%); ref: 70 -120,numérica,2.3,3.8 – 68.5 – 141.51
+Lab. — coagulação,prothrombin.time.ratio,prothrombin.time.ratio,numérica,1.7,0.85 – 1.22 – 14.89
+Lab. — coagulação,fibrinogen,fibrinogen (g/L); ref: 2 -4,numérica,1.7,0.51 – 3.04 – 8.32
+Lab. — marcadores cardíacos,high.sensitivity.troponin,high.sensitivity.troponin (pg/mL); ref:0 -14 ,numérica,3.9,0 – 0.055 – 45.675
+Lab. — marcadores cardíacos,myoglobin,myoglobin (ng/ml); ref: 28 - 72,numérica,80.2,17.58 – 78.43 – 994.82
+Lab. — marcadores cardíacos,creatine.kinase.isoenzyme.to.creatine.kinase,creatine.kinase.isoenzyme.to.creatine.kinase; ref: 0 -0.05,numérica,12.0,0.0130435 – 0.17 – 1
+Lab. — marcadores cardíacos,hydroxybutyrate.dehydrogenase.to.lactate.dehydrogenase,hydroxybutyrate.dehydrogenase.to.lactate.dehydrogenase; ref: 0.2-0.8,numérica,12.0,0.36 – 0.82 – 1.15
+Lab. — marcadores cardíacos,hydroxybutyrate.dehydrogenase,hydroxybutyrate.dehydrogenase(U/L); ref: 90 -180,numérica,12.0,78 – 187 – 2666
+Lab. — marcadores cardíacos,glutamic.oxaloacetic.transaminase,glutamic.oxaloacetic.transaminase(IU/L); ref: 15 -40,numérica,12.6,5 – 26 – 6640
+Lab. — marcadores cardíacos,creatine.kinase,creatine.kinase (IU/L); ref: 22 -270,numérica,12.0,17 – 91 – 5920
+Lab. — marcadores cardíacos,creatine.kinase.isoenzyme,creatine.kinase.isoenzyme (IU/L); ref: 0-32,numérica,12.0,0.9 – 16.1 – 424
+Lab. — marcadores cardíacos,lactate.dehydrogenase,lactate.dehydrogenase(IU/L); ref: 90 -282,numérica,12.0,107 – 229 – 6279
+Lab. — marcadores cardíacos,brain.natriuretic.peptide,brain.natriuretic.peptide (pg/ml); ref: 0 -100,numérica,1.7,2.69 – 753.03 – 5000
+Lab. — eletrólitos,carbon.dioxide.binding.capacity,carbon.dioxide.binding.capacity (mmol/L); ref: 22 -30,numérica,0.5,2.1 – 23.9 – 47.2
+Lab. — eletrólitos,calcium,calcium (mmol/L); ref: 2.11 - 2.52,numérica,0.5,1.39 – 2.29 – 3.37
+Lab. — eletrólitos,potassium,potassium(mmol/L); ref:3.5 - 5.3,numérica,0.5,1.67 – 3.88 – 11.1
+Lab. — eletrólitos,chloride,chloride(mmol/L); ref:99 - 110,numérica,0.5,70.9 – 102.6 – 125.1
+Lab. — eletrólitos,sodium,sodium(mmol/L); ref:137 - 147,numérica,0.5,107.5 – 139 – 159
+Lab. — eletrólitos,Inorganic.Phosphorus,Inorganic.Phosphorus (mmol/L); ref: 0.85-1.51,numérica,79.7,0.54 – 1.04 – 4.26
+Lab. — eletrólitos,serum.magnesium,serum.magnesium (mmol/L); ref:0.75-1.02,numérica,79.7,0.52 – 0.87 – 1.49
+Lab. — bioquímica hepática e inflamação,high.sensitivity.protein,high.sensitivity.C reactive protein (mg/L); ref: 0- 5,numérica,53.1,0.1 – 9.4 – 188.1
+Lab. — bioquímica hepática e inflamação,nucleotidase,nucleotidase(U/L); ref: 0-10,numérica,26.3,0.3 – 3 – 31.4
+Lab. — bioquímica hepática e inflamação,fucosidase,fucosidase(U/L); ref: 0-40,numérica,26.3,3.8 – 18.7 – 59.2
+Lab. — bioquímica hepática e inflamação,albumin,albumin (g/L); ref: 40-55,numérica,5.1,12.6 – 36.8 – 52.7
+Lab. — bioquímica hepática e inflamação,white.globulin.ratio,white.globulin.ratio; ref: 1.2-2.4,numérica,5.1,0.1 – 1.3 – 2.6
+Lab. — bioquímica hepática e inflamação,cholinesterase,cholinesterase(U/L); ref:3000-13000,discreta,100.0,
+Lab. — bioquímica hepática e inflamação,glutamyltranspeptidase,glutamyltranspeptidase(U/L); ref:10-60,numérica,5.1,5 – 39 – 721
+Lab. — bioquímica hepática e inflamação,glutamic.pyruvic.transaminase,glutamic.pyruvic.transaminase(U/L); ref: 9-50,numérica,5.1,3 – 21 – 4928
+Lab. — bioquímica hepática e inflamação,glutamic.oxaliplatin,AST/ALT ratio; ref: <0.8,numérica,70.5,0.01 – 1.2 – 11.14
+Lab. — bioquímica hepática e inflamação,indirect.bilirubin,indirect.bilirubin (umol/L); ref: 0-16,numérica,5.1,1 – 11.6 – 128.6
+Lab. — bioquímica hepática e inflamação,alkaline.phosphatase,alkaline.phosphatase (U/L); ref: 45-125,numérica,5.1,19 – 80 – 1085
+Lab. — bioquímica hepática e inflamação,globulin,globulin (g/L); ref: 20-40,numérica,5.1,13.7 – 27.9 – 88.3
+Lab. — bioquímica hepática e inflamação,direct.bilirubin,direct.bilirubin (umol/L); ref: 0-6.8,numérica,5.1,0.3 – 6.5 – 179.8
+Lab. — bioquímica hepática e inflamação,total.bilirubin,total.bilirubin(umol/l); ref: 2-20.4,numérica,5.1,1.6 – 18.3 – 256.6
+Lab. — bioquímica hepática e inflamação,total.bile.acid,total.bile.acid(umol/l); ref: 0-20,numérica,25.4,0 – 4.7 – 170.2
+Lab. — bioquímica hepática e inflamação,total.protein,total.protein(g/l); ref: 65-85,numérica,5.1,41.7 – 64.7 – 100.9
+Lab. — bioquímica hepática e inflamação,erythrocyte.sedimentation.rate,erythrocyte.sedimentation.rate(mm/h); ref: 0-43,numérica,84.7,2 – 28 – 120
+Lab. — lipídios,cholesterol,cholesterol(mmol/l); ref:2.9-5.68,numérica,9.9,1.2 – 3.6 – 10
+Lab. — lipídios,low.density.lipoprotein.cholesterol,low.density.lipoprotein.cholesterol(mmol/l); ref:0-3.36,numérica,9.9,0.35 – 1.76 – 6.41
+Lab. — lipídios,triglyceride,triglyceride(mmol/l); ref:0.22-2.26,numérica,9.9,0.22 – 0.96 – 24.45
+Lab. — lipídios,high.density.lipoprotein.cholesterol,high.density.lipoprotein.cholesterol(mmol/l); ref:0.9-2.19,numérica,9.9,0.02 – 1.07 – 2.74
+Lab. — lipídios,homocysteine,homocysteine(umol/l); ref: 0-15,numérica,92.7,7.55 – 18.49 – 120.19
+Lab. — lipídios,apolipoprotein.A,apolipoprotein.A(g/l); ref: 1.2-1.8,numérica,91.2,0.53 – 1.31 – 2.2
+Lab. — lipídios,apolipoprotein.B,apolipoprotein.B (g/l); ref:0.6-1.14,numérica,91.2,0.3 – 0.72 – 2.07
+Lab. — lipídios,lipoprotein,lipoprotein(mg/l); ref: 0-300,numérica,91.2,5 – 153 – 1160
+Lab. — gasometria,pH,pH; ref: 7.35-7.45,numérica,50.5,6.77 – 7.42 – 7.6
+Lab. — gasometria,standard.residual.base,standard base excess(mmol/l); ref: -3 - 3,numérica,50.5,-32.7 – -2.2 – 24.9
+Lab. — gasometria,standard.bicarbonate,standard.bicarbonate (mmol/l); ref: 21.8-26.9,numérica,50.5,2.6 – 23 – 42.7
+Lab. — gasometria,partial.pressure.of.carbon.dioxide,partial.pressure.of.carbon.dioxide (mmHg); 35-45,numérica,50.5,12 – 34 – 143
+Lab. — gasometria,total.carbon.dioxide,total.carbon.dioxide(mmol/l); ref:24-32,numérica,50.5,2.1 – 23.2 – 57.5
+Lab. — gasometria,methemoglobin,methemoglobin (%); ref: 0-6,numérica,50.6,0 – 0.2 – 2.3
+Lab. — gasometria,hematocrit.blood.gas,hematocrit.blood.gas(%); ref: 37-49,numérica,50.6,10 – 37 – 111
+Lab. — gasometria,reduced.hemoglobin,reduced.hemoglobin (%); ref: 0-5,numérica,50.6,0.3 – 2.5 – 74.7
+Lab. — gasometria,potassium.ion,potassium.ion(mmol/l); ref:3.5-4.5,numérica,50.5,1.5 – 3.81 – 7.13
+Lab. — gasometria,chloride.ion,chloride.ion(mmol/l); ref:98-106,numérica,50.5,73 – 105 – 121
+Lab. — gasometria,sodium.ion,sodium.ion(mmol/l); ref:136-146,numérica,50.5,109.3 – 137.1 – 148.8
+Lab. — gasometria,glucose.blood.gas,glucose.blood.gas(mmol/l); ref: 3.9-6.1,numérica,50.5,0.2 – 6.7 – 41
+Lab. — gasometria,lactate,lactate(mmol/l); ref: 0.5-2.2,numérica,50.5,0.6 – 1.8 – 19.9
+Lab. — gasometria,measured.residual.base,measured base excess(mmol/L); ref: -3 - +3,numérica,50.5,-31.6 – -1.7 – 18.4
+Lab. — gasometria,measured.bicarbonate,measured.bicarbonate mmol/L); ref: 22-30,numérica,50.5,1.8 – 22.2 – 53.1
+Lab. — gasometria,carboxyhemoglobin,carboxyhemoglobin(%); ref: 0-1.6,numérica,50.6,0 – 0.4 – 5.3
+Lab. — gasometria,body.temperature.blood.gas,body.temperature.blood.gas (℃),discreta,50.5,37.0
+Lab. — gasometria,oxygen.saturation,oxygen.saturation(%); ref: 93-98,numérica,50.5,25 – 98 – 100
+Lab. — gasometria,partial.oxygen.pressure,partial.oxygen.pressure(mmHg); ref: 83-108,numérica,50.5,20 – 102 – 255
+Lab. — gasometria,oxyhemoglobin,oxyhemoglobin(%); ref:94-97,numérica,50.6,24.3 – 96.6 – 99.1
+Lab. — gasometria,anion.gap,anion.gap(mmol/l); ref:12-16,numérica,50.5,-1.2 – 13.8 – 43.7
+Lab. — gasometria,free.calcium,free.calcium(mmol/l); ref:1.15-1.29,numérica,50.5,0.89 – 1.11 – 1.39
+Lab. — gasometria,total.hemoglobin,total.hemoglobin(g/L); ref: 130-175,numérica,50.6,35 – 127 – 203
+Desfechos e seguimento,outcome.during.hospitalization,"outcome during hospitalization, recorded after the decision of discharge was made ( living vs. died in the hospital)",categórica,0.0,"Alive, Dead, DischargeAgainstOrder"
+Desfechos e seguimento,death.within.28.days,death.within.28.days,binária,0.0,"0, 1"
+Desfechos e seguimento,re.admission.within.28.days,re.admission.within.28.days,binária,0.0,"0, 1"
+Desfechos e seguimento,death.within.3.months,death.within.3.months,binária,0.0,"0, 1"
+Desfechos e seguimento,re.admission.within.3.months,re.admission.within.3.months,binária,0.0,"0, 1"
+Desfechos e seguimento,death.within.6.months,death.within.6.months,binária,0.0,"0, 1"
+Desfechos e seguimento,re.admission.within.6.months,re.admission.within.6.months,binária,0.0,"0, 1"
+Desfechos e seguimento,time.of.death..days.from.admission.,time.of.death..days.from.admission.,numérica,97.8,1 – 4.5 – 350
+Desfechos e seguimento,re.admission.time..days.from.admission.,re.admission.time..days.from.admission.,numérica,55.1,1 – 83 – 2280
+Desfechos e seguimento,return.to.emergency.department.within.6.months,return.to.emergency.department.within.6.months,binária,0.0,"0.0, 1.0"
+Desfechos e seguimento,time.to.emergency.department.within.6.months,time.to.emergency.department.within.6.months,numérica,55.3,1 – 83 – 2280
+Informações da alta,DestinationDischarge,"Destination of hospital discharge, recorded after discharge",categórica,0.0,"Died, HealthcareFacility, Home, Unknown"
+Informações da alta,discharge.department,the patient discharged from,categórica,0.0,"Cardiology, GeneralWard, ICU, Others"
+Informações da alta,dischargeDay,dischargeDay: days from admission to hospital discharge,numérica,0.0,1 – 8 – 123

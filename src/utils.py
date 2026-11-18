@@ -22,10 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "DataBase"
 RESULTS_DIR = BASE_DIR / "results"
 FIGURES_DIR = RESULTS_DIR / "figures"
+CSV_DIR = RESULTS_DIR / "csv"
 
 # Garante que as pastas de saída existam no momento da importação
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+CSV_DIR.mkdir(parents=True, exist_ok=True)
 
 # ==========================================
 # 2. Identidade Visual (Cores)
@@ -73,5 +75,6 @@ def clean_results():
     # Recria as pastas para evitar erros de "FileNotFound" nas próximas execuções
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+    CSV_DIR.mkdir(parents=True, exist_ok=True)
     
     print(f"Limpeza concluída: O diretório '{RESULTS_DIR.name}/' foi esvaziado.")
