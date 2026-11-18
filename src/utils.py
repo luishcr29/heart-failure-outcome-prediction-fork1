@@ -58,7 +58,7 @@ def save_fig(fig, name):
         name (str): O nome do arquivo sem a extensão.
     """
     filepath = FIGURES_DIR / f"{name}.pdf"
-    fig.savefig(filepath, bbox_inches="tight")
+    fig.savefig(filepath, format="pdf", bbox_inches="tight", pad_inches=0.15)
 
     display(FileLink(filepath, result_html_prefix="📄 Figura salva! Abrir: "))
     

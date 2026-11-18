@@ -19,7 +19,7 @@ from sklearn.metrics import (
     confusion_matrix,
     ConfusionMatrixDisplay,
 )
-from src.utils import save_fig
+from src.utils import save_fig, RESULTS_DIR
 
 FIGURES_DIR = Path(__file__).resolve().parent.parent / "results" / "figures"
 
@@ -87,10 +87,10 @@ def plot_confusion_matrix(model, model_name, X_test, y_test, filename="confusion
     )
     disp.plot(cmap="Blues", ax=ax, values_format="d", colorbar=False)
     ax.set_title(f"Matriz de Confusão — {model_name}")
-    ax.set_xlabel("Classe Predita")
-    ax.set_ylabel("Classe Real")
+    ax.set_xlabel("Classe Predita", labelpad=8)
+    ax.set_ylabel("Classe Real", labelpad=8)
     ax.grid(False)
-
+           
     plt.tight_layout()
     plt.show()
     save_fig(fig, filename)
@@ -134,25 +134,7 @@ def plot_clinical_interpretability(
 
     print(f"LASSO (L1) manteve {n_selected} de {len(lasso_names)} atributos com coeficiente não-nulo.")
 
-    # fig, axes = plt.subplots(1, 2, figsize=(13, 6))
-
-    # # Painel Esquerdo: Random Forest
-    # axes[0].barh(rf_df["Atributo"], rf_df["Importância"], color="#2b6cb0")
-    # axes[0].set_title(f"Top {top_n} Atributos — Random Forest (Gini)")
-    # axes[0].set_xlabel("Importância Relativa")
-    # axes[0].xaxis.set_major_locator(mticker.MaxNLocator(nbins=5))
-    # axes[0].xaxis.set_major_formatter(mticker.FormatStrFormatter("%.3f"))
-    # axes[0].grid(axis="x", alpha=0.3)
-
-    # # Painel Direito: LASSO
-    # colors = ["#c53030" if c > 0 else "#2f855a" for c in lasso_top["Coeficiente"]]
-    # axes[1].barh(lasso_top["Atributo"], lasso_top["Coeficiente"], color=colors)
-    # axes[1].axvline(0, color="black", lw=0.8)
-    # axes[1].set_title(f"Top {top_n} Coeficientes — LASSO L1 (Vermelho = ↑ Risco)")
-    # axes[1].set_xlabel("Coeficiente Log-Odds Padronizado")
-    # axes[1].grid(axis="x", alpha=0.3)
-
-    fig, axes = plt.subplots(2, 1, figsize=(7, 8.5))
+    fig, axes = plt.subplots(2, 1, figsize=(7.5, 9.0), layout="constrained")
 
     # Painel Superior: Random Forest
     axes[0].barh(rf_df["Atributo"], rf_df["Importância"], color="#2b6cb0")
@@ -160,6 +142,7 @@ def plot_clinical_interpretability(
     axes[0].set_xlabel("Importância Relativa")
     axes[0].xaxis.set_major_locator(mticker.MaxNLocator(nbins=5))
     axes[0].xaxis.set_major_formatter(mticker.FormatStrFormatter("%.3f"))
+    axes[0].tick_params(axis="y", labelsize=8.5)
     axes[0].grid(axis="x", alpha=0.3)
 
     # Painel Inferior: LASSO
@@ -168,10 +151,11 @@ def plot_clinical_interpretability(
     axes[1].axvline(0, color="black", lw=0.8)
     axes[1].set_title(f"Top {top_n} Coeficientes — LASSO L1 (Vermelho = ↑ Risco)")
     axes[1].set_xlabel("Coeficiente Log-Odds Padronizado")
+    axes[1].tick_params(axis="y", labelsize=8.5)
     axes[1].grid(axis="x", alpha=0.3)
 
     plt.tight_layout()
     plt.show()
     save_fig(fig, filename)
-
+    
     return rf_df.iloc[::-1], lasso_top.drop(columns=["Abs"]).iloc[::-1]
