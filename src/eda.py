@@ -1,7 +1,7 @@
-# """
-# Módulo de Análise Exploratória de Dados (EDA).
-# Responsável por gerar visualizações e resumos estatísticos.
-# """
+"""
+Módulo de Análise Exploratória de Dados (EDA).
+Responsável por gerar visualizações e resumos estatísticos.
+"""
 
 import textwrap
 import pandas as pd

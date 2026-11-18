@@ -77,3 +77,26 @@ def clean_results():
     CSV_DIR.mkdir(parents=True, exist_ok=True)
     
     print(f"Limpeza concluída: O diretório '{RESULTS_DIR.name}/' foi esvaziado.")
+
+# import re
+
+# def save_fig(fig, name):
+#     """
+#     Salva uma figura como PDF vetorial com índice sequencial.
+#     """
+
+#     existing_files = list(FIGURES_DIR.glob("*.pdf"))
+
+#     indices = [
+#         int(match.group(1))
+#         for file in existing_files
+#         if (match := re.match(r"^(\d+)\.", file.name))
+#     ]
+
+#     index = max(indices, default=0) + 1
+
+#     filepath = FIGURES_DIR / f"{index}. {name}.pdf"
+
+#     fig.savefig(filepath, bbox_inches="tight")
+
+#     display(FileLink(filepath, result_html_prefix="📄 Figura salva! Abrir: "))
