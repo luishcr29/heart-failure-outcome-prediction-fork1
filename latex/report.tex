@@ -4,7 +4,6 @@
 % Pacotes essenciais para o idioma português e matemática
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-% \usepackage[brazil]{babel}
 \usepackage[brazilian]{babel}
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
@@ -22,11 +21,11 @@
 
 \title{Predição de Óbito ou Readmissão em Pacientes com Insuficiência Cardíaca: Uma Abordagem de Aprendizado de Máquina}
 
-\author{\IEEEauthorblockN{[Nome do Colega]}
+\author{\IEEEauthorblockN{[Nome da dupla]}
 \IEEEauthorblockA{\textit{Dep. de Engenharia Elétrica} \\
 \textit{Universidade Federal de Minas Gerais (UFMG)}\\
 Belo Horizonte, Brasil \\
-email.do.colega@dominio.com}
+email.da.dupla@dominio.com}
 \and
 \IEEEauthorblockN{Luis Henrique Cordeiro Rodrigues}
 \IEEEauthorblockA{\textit{Dep. de Engenharia Elétrica} \\
@@ -38,7 +37,7 @@ luishenrique.29@hotmail.com}
 \maketitle
 
 \begin{abstract}
-A insuficiência cardíaca (IC) é uma das principais causas de hospitalização e apresenta altas taxas de morbidade e mortalidade pós-alta. Este estudo tem como objetivo desenvolver um modelo de aprendizado de máquina capaz de prever o desfecho combinado de óbito ou readmissão hospitalar em até 6 meses após a internação de pacientes com IC. Utilizando uma base de dados clínicos reais com 2.008 pacientes e atributos demográficos, sinais vitais, comorbidades e exames laboratoriais, o trabalho detalha as etapas de análise exploratória, engenharia de atributos e tratamento de dados ausentes com padrão não-aleatório (NMAR).
+A insuficiência cardíaca (IC) apresenta elevadas taxas de morbidade e mortalidade pós-alta, tornando a estratificação precoce de risco essencial para o planejamento assistencial. Este estudo desenvolveu e avaliou modelos de aprendizado de máquina para prever o desfecho composto de óbito ou readmissão hospitalar em até 6 meses a partir de prontuários eletrônicos de 2.008 pacientes internados com IC. O fluxo metodológico priorizou a prevenção de vazamento de dados, o tratamento de ausências não-aleatórias (NMAR) via indicadores binários e o pré-processamento encapsulado em validação cruzada estratificada, consolidando 217 atributos clínicos, laboratoriais e farmacológicos. Foram comparados quatro algoritmos: regressão logística com regularização LASSO ($\ell_1$) e Ridge ($\ell_2$), \textit{Random Forest} e \textit{Gradient Boosting}. No conjunto de teste isolado ($n = 402$), o \textit{Random Forest} obteve a maior capacidade discriminativa ($\text{ROC-AUC} = 0,6290$), seguido em empate técnico pela regressão logística LASSO ($\text{ROC-AUC} = 0,6193$), que apresentou melhor equilíbrio operacional no limiar padrão ($\text{F1-Score} = 0,5228$; sensibilidade de $51,5\%$). A análise de interpretabilidade confirmou a relevância fisiopatológica de marcadores cardiorrenais, injúria miocárdica e gravidade funcional, além de validar empiricamente o sinal prognóstico dos indicadores de ausência de exames.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -107,17 +106,91 @@ Killip Grau IV & 1,4\% & 5,2\% \\
 \end{tabularx}
 \end{table}
 
-\subsection{Engenharia, Pré-processamento e Seleção de Atributos}
-A preparação da matriz de atributos preditores foi estruturada em duas camadas sequenciais: construção estrutural da base e pré-processamento matemático encapsulado. Na primeira camada, além do descarte das 14 variáveis associadas a desfechos e informações de alta para eliminação de vazamento de dados, foram criados 45 indicadores binários (\textit{missing flags}) para todos os atributos com taxa de ausência superior a 20\%, preservando o sinal clínico inerente ao padrão NMAR. Adicionalmente, a tabela de medicamentos foi pivotada para o formato matricial, incorporando 25 variáveis binárias correspondentes à administração de cada fármaco. O conjunto resultante consolidou uma matriz preditora de dimensões $2.008 \times 221$, composta por 114 variáveis contínuas, 6 discretas, 94 binárias e 7 categóricas.
+\subsection{Engenharia e Pré-processamento de Atributos}
+A preparação da matriz preditora foi estruturada em duas camadas sequenciais: construção estrutural da base e pré-processamento matemático encapsulado. Na primeira camada, além do descarte das 14 variáveis associadas a desfechos e informações de alta para eliminação de vazamento de dados, foram criados 45 indicadores binários (\textit{missing flags}) para todos os atributos com taxa de ausência superior a 20\%, preservando o sinal clínico inerente ao padrão NMAR. Adicionalmente, a tabela de medicamentos foi pivotada para o formato matricial, incorporando 25 variáveis binárias correspondentes à administração de cada fármaco, e foram removidas 4 colunas sem variância ou integralmente ausentes (\textit{leukemia}, \textit{cholinesterase}, \textit{cholinesterase\_is\_missing} e \textit{body.temperature.blood.gas}). O conjunto resultante consolidou uma matriz preditora de dimensões $2.008 \times 217$, composta por 113 variáveis contínuas, 7 discretas, 85 binárias e 12 categóricas.
 
-Para tratar simultaneamente escalas heterogêneas, valores ausentes residuais e a multicolinearidade diagnosticada na análise exploratória, o pré-processamento matemático foi organizado em um transformador de colunas com três fluxos distintos:
+Embora a relação entre observações e preditores ($n = 2.008$ e $p = 217$) caracterize o problema no regime estatístico clássico ($n > p$) e não em alta dimensionalidade estrita ($p > n$) \cite{b4}, a presença de escalas heterogêneas e multicolinearidade exige tratamento matemático padronizado. Para isso, construiu-se um transformador de colunas com três fluxos paralelos:
 \begin{itemize}
     \item \textbf{Variáveis Contínuas e Discretas (120):} Imputação pela mediana, estimador robusto aos \textit{outliers} laboratoriais identificados, seguida de padronização para média zero e variância unitária.
-    \item \textbf{Variáveis Categóricas (7):} Imputação pela moda e codificação binária (\textit{One-Hot Encoding}) com descarte da categoria de referência para evitar colinearidade artificial.
-    \item \textbf{Variáveis Binárias (94):} Imputação pela moda apenas para cobertura de eventuais ausências residuais ($\le 0,2\%$), preservando a escala $\{0, 1\}$.
+    \item \textbf{Variáveis Categóricas (12):} Imputação pela moda e codificação binária (\textit{One-Hot Encoding}) com descarte da categoria de referência para evitar colinearidade artificial.
+    \item \textbf{Variáveis Binárias (85):} Imputação pela moda apenas para cobertura de eventuais ausências residuais ($\le 0,2\%$), preservando a escala $\{0, 1\}$.
 \end{itemize}
+Todo o fluxo de transformação é ajustado exclusivamente sobre as partições de treinamento dentro da validação cruzada, assegurando a ausência de vazamento estatístico.
 
-Embora a relação entre observações e preditores ($n = 2.008$ e $p = 221$) caracterize o problema no regime estatístico clássico ($n > p$) e não em alta dimensionalidade estrita ($p > n$) \cite{b4}, a forte colinearidade entre exames laboratoriais exige redução de redundância. Optou-se por um método embutido de seleção baseado em regularização LASSO ($\ell_1$) \cite{b4}, em detrimento de projeções abstratas como a Análise de Componentes Principais (PCA), preservando a interpretabilidade clínica das variáveis originais. O seletor emprega uma regressão logística penalizada ($C = 0,1$) com balanceamento de pesos entre classes para zerar coeficientes redundantes antes do treinamento de algoritmos sensíveis à colinearidade. Todo o fluxo de imputação, padronização e seleção é ajustado exclusivamente sobre as partições de treinamento dentro da validação cruzada, assegurando a ausência de vazamento estatístico.
+\subsection{Protocolo de Treinamento e Seleção de Algoritmos}
+Para estimar a capacidade de generalização sem viés de otimismo, o conjunto de dados foi inicialmente particionado de forma estratificada em treinamento (80\%, $n = 1.606$) e teste (20\%, $n = 402$), mantendo o conjunto de teste rigorosamente isolado até a etapa final de avaliação. Sobre a partição de treinamento, conduziu-se uma busca em grade (\textit{Grid Search}) acoplada à validação cruzada estratificada em $K = 5$ dobras, adotando a área sob a curva ROC (ROC-AUC) como métrica de seleção por sua invariância ao limiar de decisão \cite{b4}. Para compensar o desbalanceamento moderado entre classes (prevalência de 41,5\%) sem introduzir ruído sintético nas variáveis binárias de medicamentos e indicadores de ausência, aplicou-se ponderação inversamente proporcional à frequência das classes durante o ajuste dos estimadores.
+
+Considerando a natureza tabular mista da base e a forte multicolinearidade entre marcadores laboratoriais, foram selecionados quatro algoritmos representativos das principais famílias de aprendizagem supervisionada \cite{b4}, todos encapsulados diretamente no fluxo de pré-processamento:
+\begin{enumerate}
+    \item \textbf{Regressão Logística com Regularização LASSO ($\ell_1$):} Modelo linear interpretável que realiza seleção embutida de atributos ao zerar coeficientes redundantes ou colineares.
+    \item \textbf{Regressão Logística com Regularização Ridge ($\ell_2$):} Contraponto linear que mantém todos os preditores mediante encolhimento contínuo dos pesos, avaliando o efeito da informação distribuída entre exames correlacionados.
+    \item \textbf{Random Forest (\textit{Bagging}):} Comitê de árvores de decisão descorrelacionadas via amostragem \textit{bootstrap} e subconjuntos aleatórios de atributos, reduzindo a variância e capturando não linearidades sem sensibilidade à multicolinearidade.
+    \item \textbf{Gradient Boosting:} Comitê sequencial baseado em árvores rasas ajustadas sobre os gradientes residuais das iterações anteriores, focado na redução de viés em dados tabulares clínicos.
+\end{enumerate}
+
+\section{Resultados e Discussão}
+
+\subsection{Desempenho Comparativo na Validação Cruzada e no Teste}
+A Tabela~\ref{tab:desempenho_modelos} consolida o desempenho dos quatro modelos candidatos na validação cruzada estratificada em 5 dobras (conjunto de treinamento, $n = 1.606$) e na avaliação final sobre o conjunto de teste isolado ($n = 402$). Na validação cruzada, os comitês baseados em árvores superaram os modelos lineares, com o \textit{Random Forest} atingindo a maior média de ROC-AUC ($0,6646 \pm 0,0360$), seguido pelo \textit{Gradient Boosting} ($0,6553 \pm 0,0262$). Entre os modelos lineares, a regressão logística com regularização LASSO ($0,6476 \pm 0,0294$, $C = 0,1$) superou a penalização Ridge ($0,6362 \pm 0,0348$, $C = 0,01$), indicando que a promoção de esparsidade atenua o ruído decorrente da multicolinearidade laboratorial.
+
+\begin{table*}[htbp]
+\caption{Desempenho Comparativo dos Modelos na Validação Cruzada ($n = 1.606$) e no Conjunto de Teste ($n = 402$)}
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|c|c|}
+\hline
+\textbf{Modelo} & \textbf{ROC-AUC (CV)} & \textbf{ROC-AUC (Teste)} & \textbf{Acurácia} & \textbf{Precisão} & \textbf{Sensibilidade} & \textbf{F1-Score} \\
+\hline
+\hline
+Random Forest (\textit{Bagging}) & $0,6646 \pm 0,0360$ & \textbf{0,6290} & 0,6020 & 0,5267 & 0,4132 & 0,4631 \\
+Regressão Logística (LASSO $\ell_1$) & $0,6476 \pm 0,0294$ & 0,6193 & 0,6095 & 0,5309 & \textbf{0,5150} & \textbf{0,5228} \\
+Regressão Logística (Ridge $\ell_2$) & $0,6362 \pm 0,0348$ & 0,6129 & 0,6095 & 0,5316 & 0,5030 & 0,5169 \\
+Gradient Boosting & $0,6553 \pm 0,0262$ & 0,6097 & \textbf{0,6119} & \textbf{0,5359} & 0,4910 & 0,5125 \\
+\hline
+\end{tabular}
+\label{tab:desempenho_modelos}
+\end{center}
+\end{table*}
+
+Na avaliação sobre o conjunto de teste, observou-se uma redução moderada da métrica ROC-AUC em todos os algoritmos, mantendo-se dentro do intervalo de $1$ a $1,7$ desvio padrão da validação cruzada, o que é compatível com a variância amostral esperada para $402$ observações. O \textit{Random Forest} preservou a liderança discriminativa ($\text{ROC-AUC} = 0,6290$), enquanto o \textit{Gradient Boosting} apresentou o maior decaimento ($0,6553$ para $0,6097$), sugerindo leve sobreajuste aos dados de treinamento. A Fig.~\ref{fig:roc_curves} apresenta as curvas ROC sobrepostas no conjunto de teste, evidenciando trajetórias próximas entre as abordagens e superioridade consistente em relação ao classificador aleatório.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=\columnwidth]{img/roc_curves_test.pdf}}
+\caption{Curvas ROC comparativas dos quatro modelos avaliados no conjunto de teste ($n = 402$).}
+\label{fig:roc_curves}
+\end{figure}
+
+Sob a perspectiva do compromisso entre flexibilidade e interpretabilidade \cite{b4}, destaca-se o empate técnico entre o \textit{Random Forest} e a regressão logística LASSO na capacidade discriminativa global (diferença de $0,0097$ em ROC-AUC). Quando avaliado no limiar de decisão padrão ($0,5$), o modelo LASSO exibiu melhor equilíbrio operacional, superando o \textit{Random Forest} em acurácia ($0,6095$ contra $0,6020$), sensibilidade ($0,5150$ contra $0,4132$) e F1-Score ($0,5228$ contra $0,4631$). A magnitude global das métricas reflete a complexidade inerente ao prognóstico em janelas de 6 meses baseado exclusivamente em registros da internação, uma vez que determinantes críticos pós-alta --- como adesão terapêutica, dieta e acompanhamento ambulatorial --- não estão presentes no prontuário eletrônico.
+
+\subsection{Análise de Erros e Implicações Clínicas do Limiar}
+A matriz de confusão do modelo de maior ROC-AUC no conjunto de teste (\textit{Random Forest}) é exibida na Fig.~\ref{fig:confusion_matrix}. Dos 235 pacientes que permaneceram estáveis, 173 foram classificados corretamente (especificidade de 73,6\%) e 62 receberam alertas falso-positivos. Entretanto, entre os 167 pacientes que evoluíram para óbito ou readmissão, o modelo identificou 69 casos (sensibilidade de 41,3\%) e produziu 98 falsos negativos.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.9\columnwidth]{img/confusion_matrix_best.pdf}}
+\caption{Matriz de confusão do modelo \textit{Random Forest} no conjunto de teste ($n = 402$) utilizando limiar padrão de $0,5$.}
+\label{fig:confusion_matrix}
+\end{figure}
+
+Do ponto de vista clínico, uma taxa de falsos negativos de 58,7\% limita a aplicação direta do classificador com limiar fixo de $0,5$ em protocolos de triagem de alto risco. Esse comportamento decorre da tendência de comitês de árvores em concentrar probabilidades preditas próximas à prevalência basal da classe positiva (41,5\%), tornando o ponto de corte padrão excessivamente conservador. Assim, embora o escore probabilístico contínuo seja útil para ranqueamento relativo de risco, a implantação assistencial exigiria a calibração do limiar de decisão sobre uma partição de validação para priorizar a sensibilidade conforme o custo clínico de eventos não detectados.
+
+\subsection{Interpretabilidade Clínica dos Atributos}
+Para auditar a plausibilidade médica das predições, a Fig.~\ref{fig:feature_importance} compara os 15 atributos mais relevantes segundo a redução média de impureza de Gini no \textit{Random Forest} e os 15 coeficientes padronizados de maior magnitude na regressão logística LASSO.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=\columnwidth]{img/feature_importance.pdf.pdf}}
+\caption{Interpretabilidade clínica dos modelos: (superior) importância relativa por impureza de Gini no \textit{Random Forest}; (inferior) coeficientes padronizados não-nulos em \textit{log-odds} da regressão logística LASSO ($\ell_1$).}
+\label{fig:feature_importance}
+\end{figure}
+
+No \textit{Random Forest}, os principais preditores apresentam forte coerência fisiopatológica com a insuficiência cardíaca, destacando-se marcadores da síndrome cardiorrenal (ureia, taxa de filtração glomerular, creatinina e cistatina), injúria e estresse miocárdico (troponina de alta sensibilidade e peptídeo natriurético cerebral --- BNP), coagulação (D-dímero, fibrinogênio e atividade de protrombina), eletrólitos séricos (potássio, sódio e cloreto) e parâmetros estruturais do ecocardiograma (diâmetro diastólico final do ventrículo esquerdo e fluxo mitral). Como ressalva metodológica, observa-se que os 15 atributos mais bem ranqueados são variáveis contínuas, refletindo o viés conhecido da métrica de impureza de Gini em favor de preditores numéricos de alta cardinalidade em detrimento de indicadores binários.
+
+De forma complementar, a regularização LASSO comprimiu o espaço de 234 variáveis codificadas para apenas 72 coeficientes não-nulos, preservando a interpretação direta da direção do risco. O modelo associou maior probabilidade de óbito ou readmissão a escores elevados de comorbidade (Índice de Charlson --- CCI), à classe funcional NYHA IV e ao aumento do diâmetro diastólico final do ventrículo esquerdo, enquanto maior pontuação de abertura ocular e uso de hidroclorotiazida apresentaram associação protetora. Adicionalmente, a presença de múltiplos indicadores de ausência do painel ecocardiográfico (\textit{LV\_is\_missing}, \textit{AMS\_is\_missing}, \textit{EMS\_is\_missing} e \textit{LVEF\_is\_missing}) entre os coeficientes de maior magnitude corrobora empiricamente a hipótese de dados faltantes não-aleatórios (NMAR), ainda que os sinais opostos entre indicadores do mesmo exame reflitam colinearidade residual entre as \textit{missing flags}.
+
+\section{Conclusão}
+Este trabalho apresentou um fluxo completo e reprodutível de aprendizado de máquina para a predição de óbito ou readmissão hospitalar em até 6 meses em pacientes internados por insuficiência cardíaca. A arquitetura experimental estruturou-se sob rigoroso controle de vazamento de dados, encapsulando imputação, padronização e codificação dentro da validação cruzada estratificada sobre uma base clínica heterogênea marcada por forte multicolinearidade e padrões de ausência não-aleatórios.
+
+A comparação entre algoritmos lineares regularizados e comitês de árvores evidenciou um claro compromisso entre flexibilidade e interpretabilidade. Embora o \textit{Random Forest} tenha alcançado o maior valor de ROC-AUC tanto na validação cruzada ($0,6646$) quanto no conjunto de teste ($0,6290$), a regressão logística LASSO ($\ell_1$) atingiu desempenho discriminativo equivalente no teste ($0,6193$) com superioridade em sensibilidade e F1-Score, além de comprimir o espaço de entrada de 234 para 72 coeficientes interpretáveis. Do ponto de vista clínico, ambos os modelos convergiram para determinantes fisiopatológicos consolidados na cardiologia --- notadamente função renal, troponina, BNP, Índice de Charlson e classe funcional NYHA --- e confirmaram o valor prognóstico das \textit{missing flags} geradas para exames não solicitados.
+
+Como principais limitações, o desempenho discriminativo moderado reflete a ausência de informações pós-alta nos prontuários hospitalares, tais como adesão farmacológica e acompanhamento ambulatorial, enquanto a baixa sensibilidade observada no ponto de corte padrão ($0,5$) restringe o uso direto para triagem sem ajuste prévio. Como trabalhos futuros, recomenda-se a calibração de probabilidades e a otimização do limiar de decisão orientadas ao custo clínico dos falsos negativos, a incorporação de dados longitudinais de seguimento ambulatorial e a validação externa do modelo em coortes multicêntricas.
 
 \begin{thebibliography}{00}
 
